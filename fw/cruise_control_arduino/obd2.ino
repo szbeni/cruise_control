@@ -1,6 +1,5 @@
 void obd2Begin()
 {
-  delay(3000);
   Serial1.begin(38400); //TX-PA9/RX-PA10   connected to ELM327
   myELM327.begin(Serial1, true, 2000);  
 }
@@ -28,7 +27,7 @@ float obd2GetSpeed(){
       return kph;
     }
   }
-  return -100.0;
+  return -1;
 }
 
 float obd2GetRPM(){ 

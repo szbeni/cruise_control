@@ -2,6 +2,9 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <ELMduino.h>
+#include <STM32TimerInterrupt.h>
+#include <STM32_ISR_Timer.h>
+
 #include "throttle_pedal.h"
 
 
@@ -56,7 +59,39 @@ ELM327 myELM327;
 void startButtons();
 void buttonsLoop();
 
+
+#define HW_TIMER_INTERVAL_MS 50
+STM32Timer ITimer(TIM3);
+
+
+float throttleInPrev;
+float throttleIn, throttleOut, currentSpeed=-1, rpm;
+uint8_t brakeState;
+static int cntr = 0;
+bool initialized = false;
+
+void TimerHandler()
+{
+  if(initialized){
+    timerLoop();  
+  }
+  
+  cntr++;
+  if(cntr == 100)
+  {
+    cntr = 0;
+    digitalToggle(LED_PIN);
+  }
+    
+}
+
+
+
 void setup() {
+  pinMode(LED_PIN, OUTPUT);
+
+  ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS * 1000, TimerHandler);
+
   pinMode(BRAKE_PEDAL_PIN, INPUT);
   pedal.begin();
   pedal.setCalibration(AINA_CALIB, AINB_CALIB); 
@@ -66,12 +101,14 @@ void setup() {
   startButtons();
   
   Serial.begin(115200);   //USB (PA11/PA12) connected to USB
-  obd2Begin();
-  
+    
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;); // Don't proceed, loop forever
-  }    
+  }
+  initialized = true;
+  
+  obd2Begin();
 }
 
 
@@ -107,11 +144,15 @@ void updateScreen(uint8_t mode, float voltageA, float voltageB, float inputThrot
   display.print("    Brk:");
   display.println(brakeState);
 
-  display.print("Speed: ");
-  display.println(currentSpeed);
-
   display.print("RPM: ");
   display.println(rpm);
+
+
+  //display.print("Speed: ");
+  display.setTextSize(3);
+  display.print("  ");
+  display.println((int)currentSpeed);
+
 
   
   display.display();
@@ -165,17 +206,10 @@ void buttonLongPress(uint8_t btn_num)
     mode = MODE_NORMAL;
   }
   
-}
+} 
 
-
-void loop() {
-  obd2Loop();
-  
-  float throttleIn, throttleOut, currentSpeed, rpm;
-  uint8_t brakeState;
-  
-  currentSpeed = obd2GetSpeed();
-  rpm = obd2GetRPM();
+void timerLoop()
+{
   brakeState = digitalRead(BRAKE_PEDAL_PIN);
   
   if (brakeState == HIGH)
@@ -214,6 +248,11 @@ void loop() {
   else if (mode == MODE_MANUAL)
   {
     throttleOut = manualThrottle;
+    if ((throttleIn - 0.02f) > throttleInPrev)
+    {
+      mode = MODE_NORMAL;
+    }
+       
   }
   else if (mode == MODE_ERROR)
   {
@@ -221,6 +260,15 @@ void loop() {
   }
   
   pedal.setThrottle(throttleOut);
+  throttleInPrev = throttleIn;
   updateScreen(mode, pedal.lastVoltageA, pedal.lastVoltageB, throttleIn, throttleOut, manualThrottle, brakeState, currentSpeed, rpm);
+
+}
+
+void loop() {
+  obd2Loop();
+  currentSpeed = obd2GetSpeed();
+  Serial.println(currentSpeed);
+  rpm = obd2GetRPM();
   delay(20);
 }
