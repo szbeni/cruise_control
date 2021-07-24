@@ -1,7 +1,9 @@
+HardwareSerial Serial2(PA3, PA2); //RX - PA3, TX - PA2
+
 void obd2Begin()
 {
-  Serial1.begin(38400); //TX-PA9/RX-PA10   connected to ELM327
-  myELM327.begin(Serial1, true, 2000);  
+  Serial2.begin(38400); 
+  myELM327.begin(Serial2, false, 2000);  
 }
 
 int lastReconnectTime = 0;
