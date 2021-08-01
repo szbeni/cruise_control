@@ -17,9 +17,15 @@ void cruiseControlBegin()
   cc.currentSpeed = -1;
   cc.targetSpeed = 0;
   cc.throttleOut = 0;  
-  cc.iTerm = 0.01f;
+  cc.unit = UNIT_MPH;
+  cc.pTerm = 0.030f;
+  cc.iTerm = 0.015f;
+  cc.dTerm = 0.001f;
+  cc.iState = 0.0f;
 }
 
+
+String pressTypeStr[4] = {"Short", "Long", "Hold Start", "Hold Stop" };
 void steeringKeysCallback(int16_t key, uint8_t pressType)
 {
   if(key == KEY_DISPLAY && pressType == SHORT_PRESS)
@@ -32,14 +38,7 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
       cc.screenMode = 0;
     }
   }
-
-  if(cc.mode == MODE_NORMAL)
-  {
-    if(key == KEY_UP && pressType == LONG_PRESS)
-    {
-      cc.mode = MODE_SPEED;
-    }
-  }
+  
 
   if(cc.mode == MODE_THROTTLE)
   {
@@ -49,23 +48,54 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
     if(key == KEY_DOWN) cc.manualThrottle = changeThrottle(cc.manualThrottle, -change);
   }
 
- 
-  if(cc.mode == MODE_SPEED)
+  if(cc.screenMode == SCREEN_MODE_SPEED)
+  {
+    if(key == KEY_UNIT) cc.unit = !cc.unit;
+    if(cc.mode == MODE_SPEED)
+    {
+      float change = 1.0f;
+      if(pressType == LONG_PRESS) change *= 2.0;
+      if(key == KEY_UP) cc.targetSpeed = changeTargetSpeed(cc.targetSpeed, change);
+      if(key == KEY_DOWN) cc.targetSpeed = changeTargetSpeed(cc.targetSpeed, -change);
+      if(key == KEY_MODE) cc.mode = MODE_NORMAL; 
+    }
+  }
+
+  if(cc.screenMode == SCREEN_MODE_SETTINGS)
   {
     float change = 1.0f;
     if(pressType == LONG_PRESS) change *= 2.0;
-    if(key == KEY_UP) cc.targetSpeed = changeTargetSpeed(cc.targetSpeed, change);
-    if(key == KEY_DOWN) cc.targetSpeed = changeTargetSpeed(cc.targetSpeed, -change);
+    if(key == KEY_UP) cc.pTerm = changeValue(cc.pTerm, 0.001f, 0, 100);
+    if(key == KEY_DOWN) cc.pTerm = changeValue(cc.pTerm, -0.001f, 0, 100);
+    if(key == KEY_MODE) cc.iTerm = changeValue(cc.iTerm, 0.001f, 0, 100);
+    if(key == KEY_UNIT) cc.iTerm = changeValue(cc.iTerm, -0.001f, 0, 100);
+    if(key == KEY_SPARE1) cc.dTerm = changeValue(cc.dTerm, 0.001f, 0, 100);
+    if(key == KEY_SPARE2) cc.dTerm = changeValue(cc.dTerm, -0.001f, 0, 100);
     
-    if(key == KEY_MODE) cc.iTerm += 0.001f;
-    if(key == KEY_UNIT) 
-    {
-      cc.iTerm -= 0.001f;
-      if (cc.iTerm < 0) cc.iTerm = 0;
-    }
 
-  }  
-  Serial.print("Press: "); Serial.print(key); Serial.println(pressType);
+
+    
+  }
+
+
+
+  if(cc.mode == MODE_NORMAL)
+  {
+    if(key == KEY_UP && pressType == LONG_PRESS)
+    {
+      if(cc.currentSpeed > SPEED_MIN)
+      {
+        cc.targetSpeed = cc.currentSpeed;
+        cc.mode = MODE_SPEED;  
+      }
+    }
+  }
+
+  
+//  Serial.print(pressTypeStr[pressType]);  
+//  Serial.print(" pressed: "); 
+//  Serial.println(key); 
+  
 }
 
 void holdKeyCheck()
@@ -170,17 +200,56 @@ void cruiseControlLoop()
 float speedController(float target, float current, float dT)
 {
   float error;
-  error = (int)target - current;
-  if(error > 5.0f) error = 5.0f;
-  else if(error < -5.0f) error = -5.0f;
+  error = target - current;
   
-  cc.iState += error * cc.iTerm * dT;
+  if(error > 10.0f) error = 10.0f;
+  else if(error < -10.0f) error = -10.0f;
+ 
+  cc.error = error;
+
+
+  if(error < 0)
+  {
+    //make integrator term harher when we are speeding
+    cc.iState += -error * error * cc.iTerm * dT;
+    
+  }
+  else
+  {
+    cc.iState += error * cc.iTerm * dT;
+  
+  }
+  
+  cc.speedOut = error * cc.pTerm + cc.iState + (cc.error - cc.prevError) * cc.dTerm;
+  cc.prevError = error;
+  
+  //down hill when we suddenly starting to accelerate
+  //if (error < -2) cc.iState = 0.0f;
+    
   if(cc.iState < THROTTLE_MIN) cc.iState = 0.0f;
   else if(cc.iState > THROTTLE_MAX) cc.iState = 1.0f;
-  return cc.iState; 
 
-  
+  if(cc.speedOut < THROTTLE_MIN) cc.speedOut = 0.0f;
+  else if(cc.speedOut > THROTTLE_MAX) cc.speedOut = 1.0f;
+    
+  return cc.speedOut;
 }
+
+
+float changeValue(float currentValue, float change, float min, float max)
+{
+  currentValue += change;
+  if (currentValue > max)
+  {
+    currentValue = max;
+  }
+  else if(currentValue < min)
+  {
+   currentValue = min;
+  }
+  return currentValue;
+}
+
 
 float changeThrottle(float currentValue, float change)
 {

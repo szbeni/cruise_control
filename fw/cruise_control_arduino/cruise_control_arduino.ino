@@ -13,18 +13,27 @@ typedef struct {
   float throttleInPrev;
   float throttleIn;
   float throttleOut;
-  
+
+  //Speed control
   float currentSpeed;
   float targetSpeed;
+  float pTerm;
   float iTerm;
+  float dTerm;
   float iState;
+  float speedOut;
   float dT;
+  float error;
+  float prevError;
+  
   unsigned long lastTick;
+  uint8_t unit;
   
   float rpm;
   uint8_t brakeState;
   bool initialized = false;
   uint8_t screenMode;
+  
 } CruiseControlStruct;
 
 CruiseControlStruct cc;

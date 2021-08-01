@@ -4,11 +4,12 @@
 #define THROTTLE_MIN 0.0f
 #define THROTTLE_MAX 1.0f
 
-#define SPEED_MIN 0.0f
+#define SPEED_MIN 5.0f
 #define SPEED_MAX 120.0f
 
 
 //MODES
+
 #define CC_DEBUG_ENABLE 0
 
 #define MODE_NOT_INITIALIZED 0
@@ -23,14 +24,24 @@
 const String modeName[] = {"Not initialized", "Initialized", "Lock", "Normal", "Throttle", "RPM", "Speed", "Error"};
 
 //Screen modes
-#define SCREEN_MODE_DEBUG 0
-#define SCREEN_MODE_SPEED 1
+#define SCREEN_MODE_DEBUG1   0
+#define SCREEN_MODE_DEBUG2   1
+#define SCREEN_MODE_SPEED    2
+#define SCREEN_MODE_SETTINGS 3
 
-#define SCREEN_MODE_NUM 2
+#define SCREEN_MODE_NUM 4
+
+//Unit modes
+#define UNIT_MPH  0
+#define UNIT_KMPH 1
 
 //Keys
 #define SHORT_PRESS       0
 #define LONG_PRESS        1
+#define HOLD_START        2
+#define HOLD_STOP         3
+
+
 
 
 #define KEY_UP 0
@@ -38,6 +49,14 @@ const String modeName[] = {"Not initialized", "Initialized", "Lock", "Normal", "
 #define KEY_MODE 2
 #define KEY_UNIT 3
 #define KEY_DISPLAY 4
+
+#define KEY_SPARE1 5
+#define KEY_SPARE2 6
+#define KEY_SPARE3 7
+#define KEY_SPARE4 8
+#define KEY_SPARE5 9
+
+
 
 
 //Hardware timer
