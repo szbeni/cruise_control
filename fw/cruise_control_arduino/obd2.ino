@@ -10,7 +10,7 @@ int lastReconnectTime = 0;
 void obd2Loop()
 {
   
-  if (myELM327.status != ELM_SUCCESS)
+  if (!myELM327.connected)
   {
     if (millis() - lastReconnectTime > 500)
     {
@@ -21,10 +21,10 @@ void obd2Loop()
 }
 
 float obd2GetSpeed(){ 
-  if(myELM327.status == ELM_SUCCESS)
+  if(myELM327.nb_rx_state == ELM_SUCCESS)
   {
     float kph = myELM327.kph();     
-    if (myELM327.status == ELM_SUCCESS)
+    if (myELM327.nb_rx_state == ELM_SUCCESS)
     {
       return kph;
     }
@@ -33,13 +33,25 @@ float obd2GetSpeed(){
 }
 
 float obd2GetRPM(){ 
-  if(myELM327.status == ELM_SUCCESS)
+  if(myELM327.nb_rx_state == ELM_SUCCESS)
   {
     float rpm = myELM327.rpm();     
-    if (myELM327.status == ELM_SUCCESS)
+    if (myELM327.nb_rx_state == ELM_SUCCESS)
     {
       return rpm;
     }
   }
   return 0.0;
+}
+
+uint8_t obd2ClearDTC(){ 
+  if(myELM327.nb_rx_state == ELM_SUCCESS)
+  {
+    myELM327.clearDTC();     
+    if (myELM327.nb_rx_state == ELM_SUCCESS)
+    {
+      return 1;
+    }
+  }
+  return 0;
 }

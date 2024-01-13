@@ -1,9 +1,10 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <ELMduino.h>
 #include <STM32TimerInterrupt.h>
 #include <STM32_ISR_Timer.h>
+#include <ELMduino.h>
+//#include "ELMduino.h"
 #include "throttle_pedal.h"
 #include "config.h"
 
@@ -30,10 +31,12 @@ typedef struct {
   uint8_t unit;
   
   float rpm;
+  float rpmPrev;
   uint8_t brakeState;
   bool initialized = false;
   uint8_t screenMode;
   
+  bool clearDTCFlag = false;
 } CruiseControlStruct;
 
 CruiseControlStruct cc;
@@ -45,26 +48,32 @@ ELM327 myELM327;
 STM32Timer ITimer(TIM3);
 
 void setup() {
+  
+
   cruiseControlBegin();
   
   pinMode(LED_PIN, OUTPUT);
 
-  ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS * 1000, TimerHandler);
 
   pedal.begin();
   pedal.setCalibration(AINA_CALIB, AINB_CALIB); 
   pedal.setMinMax(AINA_MIN, AINA_MAX, AINB_MIN, AINB_MAX);
   pedal.setErrorThresholds(AINA_MAX_ERROR, AINB_MAX_ERROR, DIFFERENCE_MAX_ERROR);
 
-  
+  ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS * 1000, TimerHandler);
+
   Serial.begin(115200);   //USB (PA11/PA12) connected to USB
-    
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
-  }
 
   cruiseControlSetMode(MODE_INITIALIZED);
+
+  delay(50);
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    while(1)
+    {
+      Serial.println(F("SSD1306 allocation failed"));
+      delay(1000);
+    } 
+  }
   obd2Begin();
   steeringKeysBegin();
 }
@@ -88,8 +97,25 @@ void TimerHandler()
 // Software loop
 void loop() {
   obd2Loop();
-  
   cc.currentSpeed = obd2GetSpeed();
+  // float speed = obd2GetSpeed();
+  // if(speed != -1)
+  // {
+  //   cc.currentSpeed = speed;
+  // }
+
+  // float rpm = obd2GetRPM();
+  // if(rpm != 0.0)
+  // {
+  //   cc.rpm = rpm;
+  // }
+
+  if (cc.clearDTCFlag == true)
+  {
+    cc.clearDTCFlag = false;
+    obd2ClearDTC();
+  }
+
   screenLoop(cc.screenMode);
   delay(10);
 }

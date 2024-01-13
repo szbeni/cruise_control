@@ -1,4 +1,12 @@
 
+void lockedScreen()
+{
+  display.setTextSize(2);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(0,0);      
+  display.print("____");
+}
+
 void debugScreen2()
 {
   display.setTextSize(2);             // Normal 1:1 pixel scale
@@ -126,7 +134,7 @@ void screenLoop(uint8_t screenMode)
   if(screenBusy == 0)
   {
      display.clearDisplay();
-     
+
      switch(screenMode)
      {        
       case SCREEN_MODE_SPEED:
@@ -143,6 +151,9 @@ void screenLoop(uint8_t screenMode)
       
       case SCREEN_MODE_DEBUG1:
         debugScreen1();
+        
+      case SCREEN_MODE_LOCKED:
+        lockedScreen();
 
       default:
         debugScreen1();
