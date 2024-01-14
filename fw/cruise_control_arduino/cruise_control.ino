@@ -210,7 +210,7 @@ void cruiseControlLoop()
     {
       cc.mode = MODE_NORMAL;
     }
-    if(cc.rpm > 3000.0)
+    if(cc.rpm > 3200.0)
     {
       cc.mode  = MODE_NORMAL;
     }

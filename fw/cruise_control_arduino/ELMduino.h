@@ -386,7 +386,7 @@ public:
 	float fuelInjectTiming();
 	float fuelRate();
 	uint8_t emissionRqmts();
-	uint8_t clearDTC();
+  uint8_t clearDTC();
 
 
 	uint32_t supportedPIDs_61_80();

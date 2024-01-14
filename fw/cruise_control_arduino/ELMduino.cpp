@@ -2669,3 +2669,14 @@ void ELM327::printError()
 
 	delay(100);
 }
+
+
+uint8_t ELM327::clearDTC()
+{
+  query[0] = 0x00 + '0';
+  query[1] = 0x04 + '0';
+  query[2] = '\0';
+ 	sendCommand(query);
+
+	return 0;
+}
