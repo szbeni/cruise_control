@@ -22,23 +22,40 @@ void cruiseControlBegin()
   cc.iTerm = 0.015f;
   cc.dTerm = 0.001f;
   cc.iState = 0.0f;
+  cc.clearDTCFlag = false;
 }
 
 
 String pressTypeStr[4] = {"Short", "Long", "Hold Start", "Hold Stop" };
 void steeringKeysCallback(int16_t key, uint8_t pressType)
 {
+  if(cc.mode == MODE_LOCKED)
+  {
+    if(key == KEY_UP && pressType == SHORT_PRESS)
+    {
+      if (cc.brakeState == HIGH &&  cc.throttleIn > 0.5)
+      {
+        cc.mode = MODE_NORMAL;
+      }
+    }
+  }
   if(key == KEY_DISPLAY && pressType == SHORT_PRESS)
   {
     Serial.println(cc.screenMode);
     cc.screenMode += 1;
     
-    if (cc.screenMode >= SCREEN_MODE_NUM)
+    if (cc.screenMode >= SCREEN_MODE_LOOP_NUM)
     {
       cc.screenMode = 0;
     }
   }
   
+  if(key == KEY_DISPLAY && pressType == LONG_PRESS)
+  {
+    Serial.println("Clear DTC requsted");
+    cc.clearDTCFlag = true;
+  }
+
 
   if(cc.mode == MODE_THROTTLE)
   {
@@ -124,21 +141,24 @@ void cruiseControlLoop()
   cc.dT = 1.0f / (float)(now - cc.lastTick);
   cc.lastTick = now;
 
-
   if (cc.mode == MODE_NOT_INITIALIZED)
+  {
+    pedal.setThrottle(0);
     return;
+  }
+    
     
   if (cc.mode == MODE_INITIALIZED)
   {
-    cc.mode = MODE_NORMAL;
+    cc.mode = MODE_LOCKED;
   }
-
 
   cc.brakeState = digitalRead(BRAKE_PEDAL_PIN);
 
+  // When brake is pressed to to normal state
   if (cc.brakeState == HIGH)
   {
-    if(cc.mode != MODE_ERROR)
+    if(cc.mode != MODE_ERROR && cc.mode != MODE_LOCKED )
     {
       cc.mode = MODE_NORMAL;  
     }
@@ -160,9 +180,13 @@ void cruiseControlLoop()
 //      cc.mode = MODE_NORMAL;
 //    }
   }
-  
-  
-  if (cc.mode == MODE_NORMAL)
+
+
+  if (cc.mode == MODE_LOCKED)
+  {
+    cc.throttleOut = 0;
+  }
+  else if (cc.mode == MODE_NORMAL)
   {
     cc.throttleOut = cc.throttleIn;
     //Hold last value
@@ -185,6 +209,15 @@ void cruiseControlLoop()
     {
       cc.mode = MODE_NORMAL;
     }
+    if(cc.rpm > 3000.0)
+    {
+      cc.mode  = MODE_NORMAL;
+    }
+    // float rpmDiff = cc.rpm - cc.rpmPrev;
+    // if(cc.rpm > 2000 && rpmDiff > 100)
+    // {
+    //   cc.mode  = MODE_NORMAL;
+    // }
   }
   else if (cc.mode == MODE_ERROR)
   {
@@ -193,6 +226,7 @@ void cruiseControlLoop()
   
   pedal.setThrottle(cc.throttleOut);
   cc.throttleInPrev = cc.throttleIn;
+  cc.rpmPrev = cc.rpm;
 }
 
 

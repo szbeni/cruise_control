@@ -96,24 +96,37 @@ void speedScreen()
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.setCursor(0,0);
   sprintf(buf, "%3d", (int)(cc.targetSpeed*scalar));
-    
-  display.print(buf);
-  display.setCursor(95,22);
-  display.setTextSize(1);
-  if (mph)
-    display.print("mph");
-  else
-    display.print("km/h");
+  if (cc.mode == MODE_LOCKED)
+  {
+    display.setCursor(20,16);
+    display.print("LOCK");
+    display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
 
-  display.setTextSize(2);
-  display.setCursor(40,34);
-  sprintf(buf, "%3d", (int)(cc.currentSpeed * scalar));
-  display.print(buf);
-  
-  display.setTextSize(1);
-  display.setCursor(0,56);
-  display.print("Mode: ");
-  display.print(modeName[cc.mode]);
+  }
+  else
+  {
+    display.print(buf);
+    display.setCursor(95,22);
+    display.setTextSize(1);
+    if (mph)
+      display.print("mph");
+    else
+      display.print("km/h");
+
+    display.setTextSize(2);
+    display.setCursor(40,34);
+    sprintf(buf, "%3d", (int)(cc.currentSpeed * scalar));
+    display.print(buf);
+    
+    display.setTextSize(1);
+    display.setCursor(0,56);
+    display.print("Mode: ");
+    display.print(modeName[cc.mode]);
+    if(cc.mode == MODE_SPEED)
+    {
+      display.drawRect(0, 0, 128, 64, SSD1306_WHITE);
+    }
+  }
 }
 
 
@@ -126,7 +139,7 @@ void screenLoop(uint8_t screenMode)
   if(screenBusy == 0)
   {
      display.clearDisplay();
-     
+
      switch(screenMode)
      {        
       case SCREEN_MODE_SPEED:
@@ -143,7 +156,7 @@ void screenLoop(uint8_t screenMode)
       
       case SCREEN_MODE_DEBUG1:
         debugScreen1();
-
+        
       default:
         debugScreen1();
         break;

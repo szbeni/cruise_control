@@ -41,5 +41,17 @@ float obd2GetRPM(){
       return rpm;
     }
   }
-  return 0.0;
+  return -1;
+}
+
+uint8_t obd2ClearDTC(){ 
+  if(myELM327.status  == ELM_SUCCESS)
+  {
+    myELM327.clearDTC();     
+    if (myELM327.status == ELM_SUCCESS)
+    {
+      return 1;
+    }
+  }
+  return 0;
 }
