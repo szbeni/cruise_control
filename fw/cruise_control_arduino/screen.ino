@@ -1,4 +1,12 @@
 
+void lockedScreen()
+{
+  display.setTextSize(2);             // Normal 1:1 pixel scale
+  display.setTextColor(SSD1306_WHITE);        // Draw white text
+  display.setCursor(0,0);      
+  display.print("____");
+}
+
 void debugScreen2()
 {
   display.setTextSize(2);             // Normal 1:1 pixel scale

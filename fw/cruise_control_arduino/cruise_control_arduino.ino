@@ -3,7 +3,6 @@
 #include <Adafruit_SSD1306.h>
 #include <STM32TimerInterrupt.h>
 #include <STM32_ISR_Timer.h>
-//#include <ELMduino.h>
 #include "ELMduino.h"
 #include "throttle_pedal.h"
 #include "config.h"
@@ -97,7 +96,6 @@ void TimerHandler()
 // Software loop
 void loop() {
   obd2Loop();
-  //cc.currentSpeed = obd2GetSpeed();
   float speed = obd2GetSpeed();
   if(speed != -1)
   {

@@ -201,6 +201,7 @@ void cruiseControlLoop()
     {
       cc.mode = MODE_NORMAL;
     }
+
   }
   else if (cc.mode == MODE_SPEED)
   {

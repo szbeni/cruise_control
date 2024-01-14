@@ -358,7 +358,6 @@ public:
 	float catTempB2S2();
 
 
-  uint8_t clearDTC();
 	uint32_t supportedPIDs_41_60();
 
 	uint32_t monitorDriveCycleStatus();
@@ -387,6 +386,7 @@ public:
 	float fuelInjectTiming();
 	float fuelRate();
 	uint8_t emissionRqmts();
+	uint8_t clearDTC();
 
 
 	uint32_t supportedPIDs_61_80();
