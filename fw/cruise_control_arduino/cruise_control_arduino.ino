@@ -114,6 +114,11 @@ void loop() {
     obd2ClearDTC();
   }
 
-  screenLoop(cc.screenMode);
+  uint8_t screen = cc.screenMode;
+  if (cc.mode == MODE_LOCKED)
+  {
+    screen = SCREEN_MODE_LOCKED;
+  }
+  screenLoop(screen);
   delay(10);
 }

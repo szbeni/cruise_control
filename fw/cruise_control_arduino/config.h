@@ -1,6 +1,6 @@
 #pragma once
 
-#define VERSION 1.1
+#define VERSION 1.2
 
 //LIMITS
 #define THROTTLE_MIN 0.0f
@@ -23,16 +23,16 @@
 #define MODE_SPEED 6
 #define MODE_ERROR  7
 
-const String modeName[] = {"Not initialized", "Initialized", "Lock", "Normal", "Throttle", "RPM", "Speed", "Error", "Locked"};
+const String modeName[] = {"Not initialized", "Initialized", "Lock", "Normal", "Throttle", "RPM", "Speed", "Error"};
 
 //Screen modes
 #define SCREEN_MODE_DEBUG1   0
 #define SCREEN_MODE_DEBUG2   1
 #define SCREEN_MODE_SPEED    2
 #define SCREEN_MODE_SETTINGS 3
-#define SCREEN_MODE_LOOP_NUM 4
-#define SCREEN_MODE_LOCKED   4
+#define SCREEN_LOOP_NUM 4
 
+#define SCREEN_MODE_LOCKED   5
 
 
 //Unit modes

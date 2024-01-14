@@ -33,7 +33,8 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
   {
     if(key == KEY_UP && pressType == SHORT_PRESS)
     {
-      if (cc.brakeState == HIGH &&  cc.throttleIn > 0.5)
+      //if (cc.brakeState == HIGH &&  cc.throttleIn > 0.5)
+      if (cc.brakeState == HIGH)
       {
         cc.mode = MODE_NORMAL;
       }
@@ -44,7 +45,7 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
     Serial.println(cc.screenMode);
     cc.screenMode += 1;
     
-    if (cc.screenMode >= SCREEN_MODE_LOOP_NUM)
+    if (cc.screenMode >= SCREEN_LOOP_NUM)
     {
       cc.screenMode = 0;
     }
@@ -180,7 +181,6 @@ void cruiseControlLoop()
 //      cc.mode = MODE_NORMAL;
 //    }
   }
-
 
   if (cc.mode == MODE_LOCKED)
   {
