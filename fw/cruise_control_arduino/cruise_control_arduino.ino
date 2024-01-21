@@ -36,6 +36,7 @@ typedef struct {
   uint8_t screenMode;
   
   bool clearDTCFlag = false;
+  bool writePedalToEepromFlag = false;
 } CruiseControlStruct;
 
 CruiseControlStruct cc;
@@ -48,24 +49,18 @@ STM32Timer ITimer(TIM3);
 
 void setup() {
   
+  Serial.begin(115200);   //USB (PA11/PA12) connected to USB
+  pinMode(LED_PIN, OUTPUT);
 
   cruiseControlBegin();
   
-  pinMode(LED_PIN, OUTPUT);
-
-
   pedal.begin();
   pedal.setCalibration(AINA_CALIB, AINB_CALIB); 
   pedal.setMinMax(AINA_MIN, AINA_MAX, AINB_MIN, AINB_MAX);
   pedal.setErrorThresholds(AINA_MAX_ERROR, AINB_MAX_ERROR, DIFFERENCE_MAX_ERROR);
+  pedal.setThrottle(0);
 
-  ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS * 1000, TimerHandler);
-
-  Serial.begin(115200);   //USB (PA11/PA12) connected to USB
-
-  cruiseControlSetMode(MODE_INITIALIZED);
-
-  delay(50);
+  delay(100);
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     while(1)
     {
@@ -73,8 +68,12 @@ void setup() {
       delay(1000);
     } 
   }
+
   obd2Begin();
   steeringKeysBegin();
+  cruiseControlSetMode(MODE_INITIALIZED);
+  ITimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS * 1000, TimerHandler);
+
 }
 
 

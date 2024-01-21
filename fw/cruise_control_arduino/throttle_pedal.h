@@ -19,7 +19,7 @@ public:
   void setMinMax(float inputAMin, float inputAMax, float inputBMin, float inputBMax);
   void setErrorThresholds(float inputAMaxError, float inputBMaxError, float differentialMaxError);
   
-  void  setThrottle(float throttle);
+  void  setThrottle(float throttle, bool writeEEPROM = false);
   float getThrottle(void);
    
 private:

@@ -44,7 +44,7 @@ void ThrottlePedal::setErrorThresholds(float inputAMaxError, float inputBMaxErro
   this->differentialMaxError = differentialMaxError;
 }
 
-void ThrottlePedal::setThrottle(float throttle) {
+void ThrottlePedal::setThrottle(float throttle, bool writeEEPROM) {
   if(throttle < 0.0f) {
     throttle = 0;
   }
@@ -54,8 +54,9 @@ void ThrottlePedal::setThrottle(float throttle) {
   
   float voltageA = interpolate(throttle, inputAMin, inputAMax);
   float voltageB = interpolate(throttle, inputBMin, inputBMax);
-  setVoltage(CHANNEL_A, voltageA, false);
-  setVoltage(CHANNEL_B, voltageB, false);
+  
+  setVoltage(CHANNEL_A, voltageA, writeEEPROM);
+  setVoltage(CHANNEL_B, voltageB, writeEEPROM);
 }
 
 

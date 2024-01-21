@@ -23,6 +23,8 @@ void cruiseControlBegin()
   cc.dTerm = 0.001f;
   cc.iState = 0.0f;
   cc.clearDTCFlag = false;
+  cc.writePedalToEepromFlag = false;
+  
 }
 
 
@@ -94,6 +96,18 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
 
     
   }
+
+  if(cc.screenMode == SCREEN_MODE_DEBUG1)
+  {
+    if(key == KEY_UP) {
+      cc.writePedalToEepromFlag = true;
+    }
+    
+
+
+    
+  }
+
 
 
 
@@ -225,7 +239,15 @@ void cruiseControlLoop()
     cc.throttleOut = 0;
   }
   
-  pedal.setThrottle(cc.throttleOut);
+  bool writeEEPROM = false;
+  //Do it only once when user requested
+  if (cc.writePedalToEepromFlag)
+  {
+    Serial.println("Write to EEPROM.");
+    cc.writePedalToEepromFlag = false;
+    writeEEPROM = true;
+  }
+  pedal.setThrottle(cc.throttleOut, writeEEPROM);
   cc.throttleInPrev = cc.throttleIn;
   cc.rpmPrev = cc.rpm;
 }
