@@ -1,6 +1,6 @@
 #pragma once
 
-#define VERSION 1.2
+#define VERSION 1.3
 
 //LIMITS
 #define THROTTLE_MIN 0.0f
@@ -105,6 +105,7 @@ const String modeName[] = {"Not initialized", "Initialized", "Lock", "Normal", "
 
 //BRAKE PEDAL INPUT
 #define BRAKE_PEDAL_PIN  PB14
+#define ANALOG_MUX_PIN PB15
 
 //LED
 #define LED_PIN PC13

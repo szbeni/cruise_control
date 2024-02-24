@@ -9,7 +9,9 @@ void debugPrint(String str)
 
 void cruiseControlBegin()
 {
+  pinMode(ANALOG_MUX_PIN, OUTPUT);
   pinMode(BRAKE_PEDAL_PIN, INPUT);
+  digitalWrite(ANALOG_MUX_PIN, LOW);
   cc.screenMode = SCREEN_MODE_SPEED;
   cc.mode = MODE_NOT_INITIALIZED;
   cc.throttleInPrev = -1;
@@ -219,6 +221,7 @@ void cruiseControlLoop()
   }
   else if (cc.mode == MODE_SPEED)
   {
+    
     cc.throttleOut = speedController(cc.targetSpeed, cc.currentSpeed, cc.dT);
     if ((cc.throttleIn - 0.02f) > cc.throttleInPrev)
     {
@@ -238,6 +241,18 @@ void cruiseControlLoop()
   {
     cc.throttleOut = 0;
   }
+
+
+  // Analog MUX, select DAC output when in speed mode, otherwise use pedal from car
+  if ((cc.mode == MODE_LOCKED && cc.rpm > 600.0) || (cc.mode == MODE_SPEED))
+  {
+    digitalWrite(ANALOG_MUX_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(ANALOG_MUX_PIN, LOW);
+  }
+  
   
   bool writeEEPROM = false;
   //Do it only once when user requested
