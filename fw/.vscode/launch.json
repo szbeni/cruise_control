@@ -1,0 +1,102 @@
+{
+    "configurations": [
+        {
+            "name": "CPP Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/cruise_control_arduino/binary/cruise_control_v1.3.elf",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,
+            "debugServerArgs": "-f interface/stlink-v2.cfg -f target/stm32f4x.cfg",
+            "serverLaunchTimeout": 2000,
+            "filterStderr": true,
+            "filterStdout": false,
+            "stopAtConnect": false,
+            "serverStarted": "Listening on port 3333 for gdb connections",
+            "preLaunchTask": "",
+            "setupCommands": [
+                {
+                    "text": "-target-select remote localhost:3333",
+                    "description": "connect to target",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "monitor reset halt"
+                },
+                {
+                    "text": "monitor tpiu config internal /tmp/swo.log uart off 168000000 2000000"
+                },
+                {
+                    "text": "monitor itm ports on"
+                },
+                {
+                    "text": "load ${workspaceRoot}/cruise_control_arduino/binary/cruise_control_v1.3.elf"
+                },
+            ],
+            "logging": {
+                "moduleLoad": true,
+                "trace": true,
+                "engineLogging": true,
+                "programOutput": true,
+                "exceptions": true
+            },
+            "linux": {
+                "MIMode": "gdb",
+                "MIDebuggerPath": "arm-none-eabi-gdb",
+                "debugServerPath": "/usr/bin/openocd"
+            }
+        },
+        {
+            "name": "CPP Debug continue",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/cruise_control_arduino/binary/cruise_control_v1.3.elf",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": false,
+            "debugServerArgs": "-f interface/stlink-v2.cfg -f target/stm32f4x.cfg",
+            "serverLaunchTimeout": 2000,
+            "filterStderr": true,
+            "filterStdout": false,
+            "stopAtConnect": false,
+            "serverStarted": "Listening on port 3333 for gdb connections",
+            "preLaunchTask": "",
+            "setupCommands": [
+                {
+                    "text": "-target-select remote localhost:3333",
+                    "description": "connect to target",
+                    "ignoreFailures": false
+                },
+                // {
+                //     "text": "monitor reset halt"
+                // },
+                // {
+                //     "text": "monitor tpiu config internal /tmp/swo.log uart off 168000000 2000000"
+                // },
+                // {
+                //     "text": "monitor itm ports on"
+                // },
+                // {
+                //     "text": "load ${workspaceRoot}/cruise_control_arduino/binary/cruise_control_v1.3.elf"
+                // },
+            ],
+            "logging": {
+                "moduleLoad": true,
+                "trace": true,
+                "engineLogging": true,
+                "programOutput": true,
+                "exceptions": true
+            },
+            "linux": {
+                "MIMode": "gdb",
+                "MIDebuggerPath": "arm-none-eabi-gdb",
+                "debugServerPath": "/usr/bin/openocd"
+            }
+        },
+    ]
+}

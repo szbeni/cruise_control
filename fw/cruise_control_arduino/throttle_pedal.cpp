@@ -54,7 +54,7 @@ void ThrottlePedal::setThrottle(float throttle, bool writeEEPROM) {
   
   float voltageA = interpolate(throttle, inputAMin, inputAMax);
   float voltageB = interpolate(throttle, inputBMin, inputBMax);
-  
+
   setVoltage(CHANNEL_A, voltageA, writeEEPROM);
   setVoltage(CHANNEL_B, voltageB, writeEEPROM);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#define VERSION 1.3
+#define VERSION 1.4
 
 //LIMITS
 #define THROTTLE_MIN 0.0f

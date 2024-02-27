@@ -1,0 +1,11 @@
+{
+    "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: Chromium, ColumnLimit: 120}",
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "*.controls": "yaml",
+        "sensor_post_processing.h": "c",
+        "brushed_dc.h": "c",
+        "bsp.h": "c",
+        "usbd_tritium_device_if.h": "c"
+    }
+}

@@ -48,19 +48,20 @@ ELM327 myELM327;
 STM32Timer ITimer(TIM3);
 
 void setup() {
-  
+  pinMode(ANALOG_MUX_PIN, OUTPUT);
+  digitalWrite(ANALOG_MUX_PIN, LOW);
+
   Serial.begin(115200);   //USB (PA11/PA12) connected to USB
   pinMode(LED_PIN, OUTPUT);
 
-  cruiseControlBegin();
-  
   pedal.begin();
   pedal.setCalibration(AINA_CALIB, AINB_CALIB); 
   pedal.setMinMax(AINA_MIN, AINA_MAX, AINB_MIN, AINB_MAX);
   pedal.setErrorThresholds(AINA_MAX_ERROR, AINB_MAX_ERROR, DIFFERENCE_MAX_ERROR);
   pedal.setThrottle(0);
-
-  delay(100);
+  cruiseControlBegin();
+  
+  delay(200);
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     while(1)
     {
@@ -96,12 +97,14 @@ void TimerHandler()
 void loop() {
   obd2Loop();
   float speed = obd2GetSpeed();
+  //float speed = 0;
   if(speed != -1)
   {
     cc.currentSpeed = speed;
   }
 
   float rpm = obd2GetRPM();
+  //float rpm = 0;
   if(rpm != -1)
   {
     cc.rpm = rpm;

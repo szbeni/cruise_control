@@ -1,0 +1,84 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "options": {
+    "env": {
+      "OPENOCD_SCRIPTS": "${workspaceRoot}\\..\\OpenOCD-20170609\\share\\openocd\\scripts"
+    }
+  },
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Start-OpenOCD",
+      "command": "${env:OPENOCD_PATH}/bin/openocd",
+      "args": [
+        "-s",
+        "${env:OPENOCD_PATH}/scripts/",
+        "-f",
+        "interface/stlink.cfg",
+        "-f",
+        "target/stm32f7x.cfg"
+      ],
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(Info |Warn |Error):(.*)$",
+          "severity": 1,
+          "message": 2
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^Open On-Chip Debugger.*",
+          "endsPattern": ".*watchpoints.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "isBackground": true
+    },
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake",
+      "options": {
+        "cwd": "${workspaceRoot}/build",
+        "env": {
+          "GCC_PATH": "${env:ARM_GCC_PATH}"
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "args": [
+        "..",
+        "&&",
+        "make",
+        "all",
+        "-j9"
+      ],
+      "problemMatcher": {
+        "owner": "cpp",
+        "fileLocation": [
+          "relative",
+          "${workspaceFolder}/"
+        ],
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        }
+      }
+    }
+  ]
+}

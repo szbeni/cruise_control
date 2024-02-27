@@ -9,10 +9,10 @@ void debugPrint(String str)
 
 void cruiseControlBegin()
 {
-  pinMode(ANALOG_MUX_PIN, OUTPUT);
   pinMode(BRAKE_PEDAL_PIN, INPUT);
-  digitalWrite(ANALOG_MUX_PIN, LOW);
   cc.screenMode = SCREEN_MODE_SPEED;
+  //cc.screenMode = SCREEN_MODE_DEBUG1;
+
   cc.mode = MODE_NOT_INITIALIZED;
   cc.throttleInPrev = -1;
   cc.manualThrottle = 0;
@@ -104,10 +104,6 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
     if(key == KEY_UP) {
       cc.writePedalToEepromFlag = true;
     }
-    
-
-
-    
   }
 
 

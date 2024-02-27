@@ -66,7 +66,7 @@ void debugScreen1()
   display.print(cc.throttleIn);
   
   display.print("    Out:");
-  display.println(cc.throttleOut);
+  display.println(cc.throttleOut);  
   
   display.print("Man: ");
   display.print(cc.manualThrottle);
@@ -81,8 +81,13 @@ void debugScreen1()
   display.println(steeringKeysCheckPress());
   display.println(cntr);
   
-  display.print("speedtg: ");
-  display.println(cc.targetSpeed);
+  display.print("Va: ");
+  display.print(pedal.lastVoltageA);
+  display.print(" Vb: ");
+  display.println(pedal.lastVoltageB);
+
+  // display.print("speedtg: ");
+  // display.println(cc.targetSpeed);
   
   display.print("iTerm: ");
   display.println(cc.iTerm * 1000.0f);
