@@ -24,6 +24,9 @@ The actual speed is read from the ODB2 diagnostic bus. As soon as the user steps
 Schematic: <a href="https://raw.githubusercontent.com/szbeni/cruise_control/main/hw/cruise_control/cruise_control.pdf">cruise_control.pdf</a>
 
 Photos of prototype:
+<br>
 <img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_buttons_screen.jpg" width="400">
+<br>
 <img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_elm327.jpg" width="400">
+<br>
 <img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_pedals.jpg" width="400">
