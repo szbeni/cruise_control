@@ -21,4 +21,4 @@ In normal mode the module reads this 2 analog values and outputs them via the DA
 In cruise control mode the module is controlling the speed by changing the throttle.
 The actual speed is read from the ODB2 diagnostic bus. As soon as the user steps on the acceleration pedal or the brake pedal the unit switches back to Normal mode.
 
-Schematic: TODO
+Schematic: <a href="https://raw.githubusercontent.com/szbeni/cruise_control/main/hw/cruise_control/cruise_control.pdf">cruise_control.pdf</a>
