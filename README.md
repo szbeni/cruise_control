@@ -9,7 +9,7 @@ STM32F401 black pill based cruise control
 <img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/buttons.jpg" width="400">
 <img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/button_receiver.png">
 * 1x ELM327 Bluetooth OBD2 adapeter (Bluetooth module removed, connected directly to pic18f25k80 from blackpill)
-<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/elm327_mini.png">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/elm327_mini.jpg" width="200">
 
 
 Only do this at your on RISK!
