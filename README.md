@@ -6,10 +6,10 @@ STM32F401 black pill based cruise control
 * 2x push buttons
 * 1x SSD1306 OLED screen
 * 1x Universal Car Steering Wheel Remote Control Wireless Dvd Navigation (with analog outputs)
-<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/buttons.jpg" width="400">
-<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/button_receiver.png">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/buttons.jpg" width="400">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/button_receiver.png">
 * 1x ELM327 Bluetooth OBD2 adapeter (Bluetooth module removed, connected directly to pic18f25k80 from blackpill)
-<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/elm327_mini.jpg" width="200">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/elm327_mini.jpg" width="200">
 
 
 Only do this at your on RISK!
@@ -22,3 +22,8 @@ In cruise control mode the module is controlling the speed by changing the throt
 The actual speed is read from the ODB2 diagnostic bus. As soon as the user steps on the acceleration pedal or the brake pedal the unit switches back to Normal mode.
 
 Schematic: <a href="https://raw.githubusercontent.com/szbeni/cruise_control/main/hw/cruise_control/cruise_control.pdf">cruise_control.pdf</a>
+
+Photos of prototype:
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_buttons_screen.jpg" width="400">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_elm327.jpg" width="400">
+<img src="https://raw.githubusercontent.com/szbeni/cruise_control/main/images/photo_pedals.jpg" width="400">
