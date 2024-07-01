@@ -111,7 +111,7 @@ void steeringKeysCallback(int16_t key, uint8_t pressType)
 
   if(cc.mode == MODE_NORMAL)
   {
-    if(key == KEY_UP && pressType == LONG_PRESS)
+    if(key == KEY_UP)
     {
       if(cc.currentSpeed > SPEED_MIN)
       {
@@ -209,7 +209,7 @@ void cruiseControlLoop()
   else if (cc.mode == MODE_THROTTLE)
   {
     cc.throttleOut = cc.manualThrottle;
-    if ((cc.throttleIn - 0.02f) > cc.throttleInPrev)
+    if ((cc.throttleIn - 0.05f) > cc.throttleInPrev)
     {
       cc.mode = MODE_NORMAL;
     }
@@ -219,11 +219,11 @@ void cruiseControlLoop()
   {
     
     cc.throttleOut = speedController(cc.targetSpeed, cc.currentSpeed, cc.dT);
-    if ((cc.throttleIn - 0.02f) > cc.throttleInPrev)
+    if ((cc.throttleIn - 0.05f) > cc.throttleInPrev)
     {
       cc.mode = MODE_NORMAL;
     }
-    if(cc.rpm > 3200.0)
+    if(cc.rpm > 3300.0)
     {
       cc.mode  = MODE_NORMAL;
     }
